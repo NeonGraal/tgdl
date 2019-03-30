@@ -1,0 +1,68 @@
+# This YAML file describes your package. Stack will automatically generate a
+# Cabal file when you run `stack build`. See the hpack website for help with
+# this file: <https://github.com/sol/hpack>.
+name: tgdl
+version: '0.0.0'
+github: "NeonGraal/tgdl"
+license: MIT
+author: "Struan Judd"
+maintainer: "Struan Judd"
+synopsis: Tiny Graph Description Language (TGDL) Processor
+description: |
+  TGDL is inspired by PlantUML and YAML but is intended to be more orthoganal language.
+  See [TGDL.md][] for a description of the language
+category: Graphs
+
+extra-source-files:
+- CHANGELOG.md
+- LICENSE.md
+- package.yaml
+- README.md
+- TGDL.md
+- stack.yaml
+
+ghc-options: -Wall
+
+library:
+  dependencies:
+  - base
+  source-dirs: src/lib
+
+executables:
+  tgdl:
+    source-dirs: src/exe
+    main: Main.hs
+    dependencies:
+    - base
+    - tgdl
+    ghc-options:
+    - -rtsopts
+    - -threaded
+    - -with-rtsopts=-N
+
+benchmarks:
+  tgdl-benchmarks:
+    source-dirs: src/benchmark
+    main: Main.hs
+    dependencies:
+    - base
+    - tgdl
+    - criterion
+    ghc-options:
+    - -rtsopts
+    - -threaded
+    - -with-rtsopts=-N
+
+tests:
+  tgdl-test-suite:
+    source-dirs: src/tests
+    main: Main.hs
+    dependencies:
+    - base
+    - tgdl
+    - tasty
+    - tasty-hspec
+    ghc-options:
+    - -rtsopts
+    - -threaded
+    - -with-rtsopts=-N
