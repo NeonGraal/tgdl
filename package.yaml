@@ -26,6 +26,9 @@ ghc-options: -Wall
 library:
   dependencies:
   - base
+  - megaparsec
+  - mtl
+  - text
   source-dirs: src/lib
 
 executables:
