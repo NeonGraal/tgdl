@@ -6,14 +6,9 @@ import qualified Test.Tasty
 -- writing tests. Its website has more info: <https://hspec.github.io>.
 import Test.Tasty.Hspec
 
-import ParserTests
+import qualified Spec
 
 main :: IO ()
 main = do
-    test <- testSpec "tgdl" spec
+    test <- testSpec "tgdl" Spec.spec
     Test.Tasty.defaultMain test
-
-spec :: Spec
-spec = parallel $  parserSpec >> do
-    it "is trivially true" $ do
-        True `shouldBe` True

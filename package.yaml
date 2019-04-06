@@ -60,11 +60,14 @@ tests:
   tgdl-test-suite:
     source-dirs: src/tests
     main: Main.hs
+    build-tools:
+    - hspec-discover
     dependencies:
     - base
     - tgdl
     - tasty
     - tasty-hspec
+    - hspec
     ghc-options:
     - -rtsopts
     - -threaded

@@ -1,4 +1,4 @@
-module ParserTests (parserSpec) where
+module ParserSpec (spec) where
 
 import Test.Tasty.Hspec
 import TGDL.Parser
@@ -9,8 +9,8 @@ resultIs (Right t, c) r = (t, c) `shouldBe` r
 resultIs (Left e, _) _ = expectationFailure $ show e
 
 
-parserSpec :: Spec
-parserSpec = do
+spec :: Spec
+spec = do
     it ".node parses" $ 
         parseTGDL "test" ".node" () `resultIs`
             ([node "node" ()], "node")
@@ -23,4 +23,3 @@ parserSpec = do
     it "node1-node2 parses" $
         parseTGDL "test" "node1-node2" () `resultIs`
             ([edge "node1" "node2" ()], "node1")
-    
