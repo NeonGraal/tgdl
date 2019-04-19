@@ -14,5 +14,5 @@ parseBench t = bench benchDescr $ whnf benchParse ()
 main :: IO ()
 main = defaultMainWith config [bgroup "Parsing" [parseBench t | t <- parseBenchmarks]]
     where
-        config = defaultConfig { timeLimit = 2 }
+        config = defaultConfig { timeLimit = 2, reportFile = Just "tgdl.html" }
         parseBenchmarks = [".node1", "-node2", ".node1-node2", "node1-node2"]
