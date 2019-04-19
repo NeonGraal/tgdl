@@ -10,5 +10,5 @@ import qualified Spec
 
 main :: IO ()
 main = do
-    test <- testSpec "tgdl" Spec.spec
+    test <- testSpec "tgdl" $ parallel Spec.spec
     Test.Tasty.defaultMain test

@@ -4,22 +4,23 @@ import Test.Tasty.Hspec
 import TGDL.Parser
 import TGDL.AST
 
-resultIs :: (Show a, Eq a) => TGDLResult a -> ([AST a], String) -> Expectation
+type ParseResult a = ([AST a], String)
+
+resultIs :: (Show a, Eq a) => TGDLParseResult a -> ParseResult a -> Expectation
 resultIs (Right t, c) r = (t, c) `shouldBe` r
 resultIs (Left e, _) _ = expectationFailure $ show e
 
+parseIt :: String -> ParseResult () -> Spec
+parseIt t r =  it parseDesc $ parseTGDL parseDesc t () `resultIs` r
+    where
+        parseDesc = "parse '" ++ t ++ "'"
 
 spec :: Spec
 spec = do
-    it ".node parses" $ 
-        parseTGDL "test" ".node" () `resultIs`
-            ([node "node" ()], "node")
-    it "-node parses" $
-        parseTGDL "test" "-node2" () `resultIs`
-            ([edge "" "node2" ()], "")
-    it ".node1-node2 parses" $
-        parseTGDL "test" ".node1-node2" () `resultIs`
-            ([node "node1" (), edge "node1" "node2" ()], "node1")
-    it "node1-node2 parses" $
-        parseTGDL "test" "node1-node2" () `resultIs`
-            ([edge "node1" "node2" ()], "node1")
+    parseIt ".node" ([node "node" ()], "node")
+    parseIt "-node2" ([edge "" "node2" ()], "")
+    parseIt "- node2" ([edge "" "node2" ()], "")
+    parseIt ".node1-node2" ([node "node1" (), edge "node1" "node2" ()], "node1")
+    parseIt ".node1 - node2" ([node "node1" (), edge "node1" "node2" ()], "node1")
+    parseIt "node1-node2" ([edge "node1" "node2" ()], "node1")
+    parseIt "node1 - node2" ([edge "node1" "node2" ()], "node1")

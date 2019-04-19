@@ -1,4 +1,6 @@
-module TGDL.Parser (parseTGDL, TGDLResult) where
+{-# LANGUAGE TypeFamilies        #-}
+
+module TGDL.Parser (parseTGDL, TGDLParseResult) where
 
 import TGDL.AST
 
@@ -12,20 +14,31 @@ type TGDLState = String
 
 type TGDLParser = ParsecT Void String (State TGDLState)
 
-type TGDLResult a = (Either (ParseErrorBundle String Void) [AST a], String)
+type TGDLParseResult a = (Either (ParseErrorBundle String Void) [AST a], String)
 
-parseTGDL :: String -> String -> a -> TGDLResult a
+parseTGDL :: String -> String -> a -> TGDLParseResult a
 parseTGDL f s a = flip runState "" $ runParserT (parseDoc a) f s
 
 parseDoc :: a -> TGDLParser [AST a]
 parseDoc a = many $ parseNode a
     <|> parseEdge a
 
+spaceTab :: (MonadParsec e s m, Token s ~ Char) => m (Token s)
+spaceTab = separatorChar <|> tab
+    
+skipWs :: ParsecT Void String (State TGDLState) ()
+skipWs = void $ many spaceTab
+
+parseIdent :: ParsecT Void String (State TGDLState) String
+parseIdent = do
+    ident <- some alphaNumChar 
+    skipWs
+    return ident
 
 parseNode :: a -> TGDLParser (AST a)
 parseNode a = do
     void $ char '.'
-    name <- some alphaNumChar
+    name <- parseIdent
     put name
     return $ node name a
 
@@ -36,9 +49,10 @@ parseEdge a = parseWhole <|>
         parseEnd :: TGDLParser String
         parseEnd = do
             void $ char '-'
-            some alphaNumChar
+            skipWs
+            parseIdent
         parseWhole = do
-            n <- some alphaNumChar
+            n <- parseIdent
             e <- parseEnd
             put n
             return $ edge n e a
