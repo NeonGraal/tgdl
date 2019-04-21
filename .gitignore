@@ -3,4 +3,5 @@
 # Stack generates the Cabal file from `package.yaml` through hpack.
 /*.cabal
 /.vscode/
-tgdl.html
+*.html
+*.pdf

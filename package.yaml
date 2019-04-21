@@ -26,6 +26,8 @@ ghc-options: -Wall
 library:
   dependencies:
   - base
+  - diagrams-lib
+  - diagrams-rasterific
   - megaparsec
   - mtl
   - text
