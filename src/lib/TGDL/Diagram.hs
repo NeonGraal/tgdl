@@ -16,7 +16,7 @@ layoutCircle doc = doNodes # doArrows
   where
     doNodes =
       atPoints
-        (trailVertices $ regPoly (length docNodes) 10)
+        (trailVertices $ regPoly (length docNodes) 8 # scaleX 2)
         (map nodeEllipse docNodes)
     doArrows = applyAll [connectOutside' arrowOpts s e | [s, e] <- docEdges]
     docNodes = nub $ concatMap astNodes doc
