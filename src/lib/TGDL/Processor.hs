@@ -1,11 +1,20 @@
 -- | The TGDL Processor
-module TGDL.Processor (main) where
+module TGDL.Processor
+  ( main
+  ) where
 
-import Diagrams.Prelude
 import Diagrams.Backend.Rasterific.CmdLine
+import Diagrams.Prelude
+
+import TGDL.Diagram
+import TGDL.Parser
 
 fromFile :: FilePath -> IO (Diagram B)
-fromFile f = return $ text f <> ellipseXY 10 2 # lw 0.1
+fromFile f = do
+  fileContents <- readFile f
+  case parseTGDL f fileContents () of
+    (Right d, _) -> return $ layoutCircle d
+    (Left e, _) -> error $ show e
 
 -- | TGDL Processor main function
 main :: IO ()
